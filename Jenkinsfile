@@ -30,7 +30,7 @@ if (branch_deployment_environment) {
             }
         }
         node {
-            deploy "Deploying to ${branch_deployment_environment}"
+            echo "Deploying to ${branch_deployment_environment}"
         }
     }
 
