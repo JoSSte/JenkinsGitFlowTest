@@ -1,0 +1,1 @@
+Jenkinsfile from https://raw.githubusercontent.com/alexguzun/jenkins-pipeline-gitflow-maven/master/Jenkinsfile
