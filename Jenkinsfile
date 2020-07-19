@@ -7,13 +7,13 @@ stage('build') {
         checkout scm
         def v = version()
         currentBuild.displayName = "${env.BRANCH_NAME}-${v}-${env.BUILD_NUMBER}"
-        mvn "clean verify"
+        //mvn "clean verify"
     }
 }
 
 stage('build docker image') {
     node {
-        mvn "clean package docker:build -DskipTests"
+        //mvn "clean package docker:build -DskipTests"
     }
 }
 
@@ -50,7 +50,7 @@ if (branch_type == "dev") {
         }
         node {
             sshagent(['f1ad0f5d-df0d-441a-bea0-fd2c34801427']) {
-                mvn("jgitflow:release-start")
+                //mvn("jgitflow:release-start")
             }
         }
     }
@@ -63,7 +63,7 @@ if (branch_type == "release") {
         }
         node {
             sshagent(['f1ad0f5d-df0d-441a-bea0-fd2c34801427']) {
-                mvn("jgitflow:release-finish -Dmaven.javadoc.skip=true -DnoDeploy=true")
+                //mvn("jgitflow:release-finish -Dmaven.javadoc.skip=true -DnoDeploy=true")
             }
         }
     }
@@ -76,7 +76,7 @@ if (branch_type == "hotfix") {
         }
         node {
             sshagent(['f1ad0f5d-df0d-441a-bea0-fd2c34801427']) {
-                mvn("jgitflow:hotfix-finish -Dmaven.javadoc.skip=true -DnoDeploy=true")
+                //mvn("jgitflow:hotfix-finish -Dmaven.javadoc.skip=true -DnoDeploy=true")
             }
         }
     }
@@ -117,14 +117,14 @@ def get_branch_deployment_environment(String branch_type) {
     }
 }
 
-def mvn(String goals) {
-    def mvnHome = tool "Maven-3.2.3"
-    def javaHome = tool "JDK1.8.0_102"
-
-    withEnv(["JAVA_HOME=${javaHome}", "PATH+MAVEN=${mvnHome}/bin"]) {
-        sh "mvn -B ${goals}"
-    }
-}
+//def mvn(String goals) {
+//    def mvnHome = tool "Maven-3.2.3"
+//    def javaHome = tool "JDK1.8.0_102"
+//
+//    withEnv(["JAVA_HOME=${javaHome}", "PATH+MAVEN=${mvnHome}/bin"]) {
+//        sh "mvn -B ${goals}"
+//    }
+//}
 
 def version() {
     def matcher = readFile('pom.xml') =~ '<version>(.+)</version>'
