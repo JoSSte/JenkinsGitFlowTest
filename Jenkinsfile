@@ -1,6 +1,7 @@
 #!groovy​
 @Library('JoSSteJenkinsGlobalLibraries')
 import com.stevnsvig.jenkins.release.Release
+def rls = new Release()
 
 properties([[$class: 'BuildDiscarderProperty', strategy: [$class: 'LogRotator', numToKeepStr: '10']]])
 
@@ -19,8 +20,8 @@ stage('build docker image') {
     }
 }
 
-def branch_type = Release.get_branch_type "${env.BRANCH_NAME}"
-def branch_deployment_environment = Release.get_branch_deployment_environment branch_type
+def branch_type = rls.get_branch_type "${env.BRANCH_NAME}"
+def branch_deployment_environment = rls.get_branch_deployment_environment branch_type
 
 if (branch_deployment_environment) {
     stage('deploy') {
