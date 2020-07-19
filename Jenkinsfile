@@ -1,7 +1,6 @@
 #!groovy​
 @Library('JoSSteJenkinsGlobalLibraries')
 import com.stevnsvig.jenkins.release.Release
-def rls = new Release()
 
 properties([[$class: 'BuildDiscarderProperty', strategy: [$class: 'LogRotator', numToKeepStr: '10']]])
 
@@ -19,12 +18,12 @@ stage('build docker image') {
     }
 }
 
-def branch_type = rls.get_branch_type "${env.BRANCH_NAME}"
-def branch_deployment_environment = rls.get_branch_deployment_environment branch_type
+def branch_type = Release.get_branch_type "${env.BRANCH_NAME}"
+def branch_deployment_environment = Release.get_branch_deployment_environment branch_type
 
 if (branch_deployment_environment) {
     stage('deploy') {
-        if (branch_deployment_environment == "prod") {
+        if (branch_deployment_environment == Release.prodEnv) {
             timeout(time: 1, unit: 'DAYS') {
                 input "Deploy to ${branch_deployment_environment} ?"
             }
@@ -34,7 +33,7 @@ if (branch_deployment_environment) {
         }
     }
 
-    if (branch_deployment_environment != "prod") {
+    if (branch_deployment_environment != Release.prodEnv) {
         stage('integration tests') {
             node {
                 echo "Running integration tests in ${branch_deployment_environment}"
@@ -44,7 +43,7 @@ if (branch_deployment_environment) {
     }
 }
 
-if (branch_type == "dev") {
+if (branch_type == Release.devBranchName) {
     stage('start release') {
         timeout(time: 1, unit: 'HOURS') {
             input "Do you want to start a release?"
@@ -55,7 +54,7 @@ if (branch_type == "dev") {
     }
 }
 
-if (branch_type == "release") {
+if (branch_type == Release.releaseBranchName) {
     stage('finish release') {
         timeout(time: 1, unit: 'HOURS') {
             input "Is the release finished?"
@@ -66,7 +65,7 @@ if (branch_type == "release") {
     }
 }
 
-if (branch_type == "hotfix") {
+if (branch_type == Release.hotfixBranchName) {
     stage('finish hotfix') {
         timeout(time: 1, unit: 'HOURS') {
             input "Is the hotfix finished?"
