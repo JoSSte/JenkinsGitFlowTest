@@ -10,13 +10,12 @@ stage('build') {
         checkout scm
         def v = version()
         currentBuild.displayName = "${env.BRANCH_NAME}-${v}-${env.BUILD_NUMBER}"
-        //mvn "clean verify"
     }
 }
 
 stage('build docker image') {
     node {
-        //mvn "clean package docker:build -DskipTests"
+        echo "docker being built"
     }
 }
 
@@ -31,15 +30,14 @@ if (branch_deployment_environment) {
             }
         }
         node {
-            sh "echo Deploying to ${branch_deployment_environment}"
-            //TODO specify the deployment
+            deploy "Deploying to ${branch_deployment_environment}"
         }
     }
 
     if (branch_deployment_environment != "prod") {
         stage('integration tests') {
             node {
-                sh "echo Running integration tests in ${branch_deployment_environment}"
+                echo "Running integration tests in ${branch_deployment_environment}"
                 //TODO do the actual tests
             }
         }
@@ -52,9 +50,7 @@ if (branch_type == "dev") {
             input "Do you want to start a release?"
         }
         node {
-            sshagent(['f1ad0f5d-df0d-441a-bea0-fd2c34801427']) {
-                //mvn("jgitflow:release-start")
-            }
+            echo "starting release"
         }
     }
 }
@@ -65,9 +61,7 @@ if (branch_type == "release") {
             input "Is the release finished?"
         }
         node {
-            sshagent(['f1ad0f5d-df0d-441a-bea0-fd2c34801427']) {
-                //mvn("jgitflow:release-finish -Dmaven.javadoc.skip=true -DnoDeploy=true")
-            }
+            echo "do cleanup after the release"
         }
     }
 }
@@ -78,9 +72,7 @@ if (branch_type == "hotfix") {
             input "Is the hotfix finished?"
         }
         node {
-            sshagent(['f1ad0f5d-df0d-441a-bea0-fd2c34801427']) {
-                //mvn("jgitflow:hotfix-finish -Dmaven.javadoc.skip=true -DnoDeploy=true")
-            }
+            echo " the hotfix is done - merge?"
         }
     }
 }
