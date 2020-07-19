@@ -1,5 +1,5 @@
 #!groovy​
-@Library('JoSSteJenkinsGlobalLibraries@1.0.0')
+@Library('JoSSteJenkinsGlobalLibraries')
 import com.stevnsvig.jenkins.release.ReleaseUtil
 
 properties([[$class: 'BuildDiscarderProperty', strategy: [$class: 'LogRotator', numToKeepStr: '10']]])
