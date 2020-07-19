@@ -1,5 +1,5 @@
 #!groovy​
-@Library('JoSSteJenkinsGlobalLibraries@0.9.0')
+@Library('JoSSteJenkinsGlobalLibraries@1.0.0')
 import com.stevnsvig.jenkins.release.ReleaseUtil
 
 properties([[$class: 'BuildDiscarderProperty', strategy: [$class: 'LogRotator', numToKeepStr: '10']]])
@@ -15,11 +15,12 @@ stage('build') {
 stage('build docker image') {
     node {
         echo "docker being built"
+        echo ReleasUtil.getGitTag()
     }
 }
 
-def branch_type = ReleaseUtil.get_branch_type "${env.BRANCH_NAME}"
-def branch_deployment_environment = ReleaseUtil.get_branch_deployment_environment branch_type
+def branch_type = ReleaseUtil.getBranchType "${env.BRANCH_NAME}"
+def branch_deployment_environment = ReleaseUtil.getBranchDeploymentEnvironment branch_type
 
 if (branch_deployment_environment) {
     stage('deploy') {
