@@ -16,6 +16,7 @@ stage('build docker image') {
     node {
         echo "Docker being built"
         echo "Git Tag: ${ReleaseUtil.getGitTag()}"
+        echo "PWD: ${ReleaseUtil.getPWD()}"
     }
 }
 
